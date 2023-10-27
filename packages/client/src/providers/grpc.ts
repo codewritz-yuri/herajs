@@ -1,5 +1,5 @@
 import { AergoRPCServiceClient } from '../../types/rpc_grpc_pb';
-import grpc from 'grpc';
+import grpc from '@grpc/grpc-js';
 
 interface GrpcProviderConfig {
     url?: string;
@@ -15,27 +15,27 @@ class GrpcProvider {
 
     /**
      * .. code-block:: javascript
-     * 
+     *
      *     import { GrpcProvider } from '@herajs/client';
      *     const provider = new GrpcProvider({url: 'localhost:7845'});
-     * 
+     *
      * @param {GrpcProviderConfig} config
      */
     constructor(config: GrpcProviderConfig = {}) {
         this.config = {
             ...this.defaultConfig,
-            ...config
+            ...config,
         };
         const urlScheme = this.config.url.match(/^([a-z0-9]+):\/\//);
         if (urlScheme) {
             throw new Error(`URL for GrpcProvider should be provided without scheme (not ${urlScheme[1]})`);
         }
-        this.client = new AergoRPCServiceClient(this.config.url, grpc.credentials.createInsecure()); 
+        this.client = new AergoRPCServiceClient(this.config.url, grpc.credentials.createInsecure());
     }
 
     get defaultConfig(): GrpcProviderConfig {
         return {
-            url: 'localhost:7845'
+            url: 'localhost:7845',
         };
     }
 }
